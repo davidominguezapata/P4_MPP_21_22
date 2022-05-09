@@ -1,0 +1,18 @@
+#PBS -S /bin/bash
+
+#PBS -V
+#PBS -q batch
+#PBS -N test_cuda
+#PBS -l walltime=00:01:00
+#PBS -l nodes=venus:ppn=12
+
+source /etc/profile.d/modules.sh
+module load cuda
+
+cd $PBS_O_WORKDIR
+
+cd bandwidthTest
+
+make FILE=bandwidthTest
+make run FILE=bandwidthTest
+make clean FILE=bandwidthTest
