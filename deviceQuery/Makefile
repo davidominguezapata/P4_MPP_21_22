@@ -19,7 +19,8 @@ $(FILE): $(FILE).o
 $(FILE).o: $(FILE).cu
 	   $(NVCC) $(NVCC_FLAGS) $(CUDA_INC) $(CUDA_INC_COMMON) $(GENCODE_FLAGS) -o $@ -c $<
 
-run: ./$(FILE)
+run:
+	./$(FILE)
 
 clean:
 	rm -f *.o $(FILE)
