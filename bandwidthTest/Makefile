@@ -19,13 +19,19 @@ $(FILE): $(FILE).o
 $(FILE).o: $(FILE).cu
 	   $(NVCC) $(NVCC_FLAGS) $(CUDA_INC) $(CUDA_INC_COMMON) $(GENCODE_FLAGS) -o $@ -c $<
 
-run: ./$(FILE) --device=0 --memory=pageable --mode=range --start=1024 --end=67108864 --increment=524288 --htod
-	 ./$(FILE) --device=0 --memory=pageable --mode=range --start=1024 --end=67108864 --increment=524288 --dtod
-	 ./$(FILE) --device=0 --memory=pageable --mode=range --start=1024 --end=67108864 --increment=524288 --dtoh
-	 ./$(FILE) --device=1 --memory=pageable --mode=range --start=1024 --end=67108864 --increment=524288 --htod
-	 ./$(FILE) --device=1 --memory=pageable --mode=range --start=1024 --end=67108864 --increment=524288 --dtod
-	 ./$(FILE) --device=1 --memory=pageable --mode=range --start=1024 --end=67108864 --increment=524288 --dtoh
-
+run: 
+	./$(FILE) --device=0 --memory=pageable --mode=range --start=1024 --end=67108864 --increment=524288 --htod
+	./$(FILE) --device=0 --memory=pageable --mode=range --start=1024 --end=67108864 --increment=524288 --dtod
+	./$(FILE) --device=0 --memory=pageable --mode=range --start=1024 --end=67108864 --increment=524288 --dtoh
+	./$(FILE) --device=1 --memory=pageable --mode=range --start=1024 --end=67108864 --increment=524288 --htod
+	./$(FILE) --device=1 --memory=pageable --mode=range --start=1024 --end=67108864 --increment=524288 --dtod
+	./$(FILE) --device=1 --memory=pageable --mode=range --start=1024 --end=67108864 --increment=524288 --dtoh
+	./$(FILE) --device=0 --memory=pinned --mode=range --start=1024 --end=67108864 --increment=524288 --htod
+	./$(FILE) --device=0 --memory=pinned --mode=range --start=1024 --end=67108864 --increment=524288 --dtod
+	./$(FILE) --device=0 --memory=pinned --mode=range --start=1024 --end=67108864 --increment=524288 --dtoh
+	./$(FILE) --device=1 --memory=pinned --mode=range --start=1024 --end=67108864 --increment=524288 --htod
+	./$(FILE) --device=1 --memory=pinned --mode=range --start=1024 --end=67108864 --increment=524288 --dtod
+	./$(FILE) --device=1 --memory=pinned --mode=range --start=1024 --end=67108864 --increment=524288 --dtoh
 clean:
 	rm -f *.o $(FILE)
 
