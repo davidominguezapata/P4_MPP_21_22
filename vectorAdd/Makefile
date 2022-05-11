@@ -19,7 +19,8 @@ $(FILE): $(FILE).o
 $(FILE).o: $(FILE).cu
 		   $(NVCC) $(NVCC_FLAGS) $(CUDA_INC) $(CUDA_INC_COMMON) $(GENCODE_FLAGS) -o $@ -c $<
 
-run: ./$(FILE) --nelem=10000 --tpb=16
+run: 
+	./$(FILE) --nelem=10000 --tpb=16
 	 ./$(FILE) --nelem=20000 --tpb=16
 	 ./$(FILE) --nelem=20000 --tpb=32
 	 ./$(FILE) --nelem=30000 --tpb=16
