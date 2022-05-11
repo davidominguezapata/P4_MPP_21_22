@@ -19,7 +19,8 @@ $(FILE): $(FILE).o
 $(FILE).o: $(FILE).cu
 		   $(NVCC) $(NVCC_FLAGS) $(CUDA_INC) $(CUDA_INC_COMMON) $(GENCODE_FLAGS) -o $@ -c $<
 
-run: ./$(FILE) --gsx=4 --gsy=4 --bsx=2 --bsy=2
+run: 
+	./$(FILE) --gsx=4 --gsy=4 --bsx=2 --bsy=2
 	 ./$(FILE) --gsx=8 --gsy=8 --bsx=2 --bsy=2
 	 ./$(FILE) --gsx=8 --gsy=8 --bsx=4 --bsy=4
 	 ./$(FILE) --gsx=16 --gsy=16 --bsx=2 --bsy=2
