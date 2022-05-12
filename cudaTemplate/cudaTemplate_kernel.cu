@@ -13,7 +13,6 @@ __global__ void foo(int *gid_d)
 
     // global thread ID in thread block
     int tidb = (blockDim.x * blockDim.y * threadIdx.z) + (blockDim.x * threadIdx.y) + (threadIdx.x);
-
     // global thread ID in grid
     int tidg = (blockIdx.y * gridDim.x * blockSize + blockIdx.x * blockSize + tidb);
 

@@ -99,7 +99,7 @@ int main(int argc, char *argv[])
     // check results
     for (int i = 0; i < nPos; i++)
     {
-        assert(gid_h[i] == (i + const_h[i % CT_MEM_SIZE]));
+	assert(gid_h[i] == (i + const_h[i % CT_MEM_SIZE]));
     }
 
     // destroy events

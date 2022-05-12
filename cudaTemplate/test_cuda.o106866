@@ -1,0 +1,34 @@
+nvcc -m64 -I/usr/local/cuda-8.0/include -I/usr/local/cuda-8.0/samples/common/inc/ -Wno-deprecated-gpu-targets -o cudaTemplate.o -c cudaTemplate.cu
+g++ -O3 cudaTemplate.o -o cudaTemplate -L/usr/local/cuda-8.0/lib64 -lcudart -lm
+./cudaTemplate --gsx=2 --gsy=2 --bsx=2 --bsy=2
+Running configuration: 	 16 threads
+			 grid of 2 x 2
+			 blocks of 2 x 2 threads (4 threads with 16 bytes of shared memory per block)
+Processing Time: 0.0813 (ms)gid_h[0] = 1
+gid_h[1] = 3
+gid_h[2] = 5
+gid_h[3] = 7
+gid_h[4] = 9
+gid_h[5] = 11
+gid_h[6] = 13
+gid_h[7] = 15
+gid_h[8] = 9
+gid_h[9] = 11
+gid_h[10] = 13
+gid_h[11] = 15
+gid_h[12] = 17
+gid_h[13] = 19
+gid_h[14] = 21
+gid_h[15] = 23
+
+PASSED
+#./cudaTemplate --gsx=8 --gsy=8 --bsx=2 --bsy=2
+#./cudaTemplate --gsx=8 --gsy=8 --bsx=4 --bsy=4
+#./cudaTemplate --gsx=16 --gsy=16 --bsx=2 --bsy=2
+#./cudaTemplate --gsx=16 --gsy=16 --bsx=4 --bsy=4
+#./cudaTemplate --gsx=16 --gsy=16 --bsx=8 --bsy=8
+#./cudaTemplate --gsx=32 --gsy=32 --bsx=2 --bsy=2
+#./cudaTemplate --gsx=32 --gsy=32 --bsx=4 --bsy=4
+#./cudaTemplate --gsx=32 --gsy=32 --bsx=8 --bsy=8
+#./cudaTemplate --gsx=32 --gsy=32 --bsx=16 --bsy=16
+rm -f *.o cudaTemplate

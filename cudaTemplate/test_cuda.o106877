@@ -1,0 +1,63 @@
+nvcc -m64 -I/usr/local/cuda-8.0/include -I/usr/local/cuda-8.0/samples/common/inc/ -Wno-deprecated-gpu-targets -o cudaTemplate.o -c cudaTemplate.cu
+g++ -O3 cudaTemplate.o -o cudaTemplate -L/usr/local/cuda-8.0/lib64 -lcudart -lm
+./cudaTemplate --gsx=4 --gsy=4 --bsx=2 --bsy=2 --bsz=2
+Running configuration: 	 128 threads
+			 grid of 4 x 4
+			 blocks of 2 x 2 x 2 threads (8 threads with 32 bytes of shared memory per block)
+Processing Time: 0.1500 (ms)
+PASSED
+./cudaTemplate --gsx=8 --gsy=8 --bsx=2 --bsy=2 --bsz=2
+Running configuration: 	 512 threads
+			 grid of 8 x 8
+			 blocks of 2 x 2 x 2 threads (8 threads with 32 bytes of shared memory per block)
+Processing Time: 0.1223 (ms)
+PASSED
+./cudaTemplate --gsx=8 --gsy=8 --bsx=4 --bsy=4 --bsz=4
+Running configuration: 	 4096 threads
+			 grid of 8 x 8
+			 blocks of 4 x 4 x 4 threads (64 threads with 256 bytes of shared memory per block)
+Processing Time: 0.1245 (ms)
+PASSED
+./cudaTemplate --gsx=16 --gsy=16 --bsx=2 --bsy=2 --bsz=2
+Running configuration: 	 2048 threads
+			 grid of 16 x 16
+			 blocks of 2 x 2 x 2 threads (8 threads with 32 bytes of shared memory per block)
+Processing Time: 0.0858 (ms)
+PASSED
+./cudaTemplate --gsx=16 --gsy=16 --bsx=4 --bsy=4 --bsz=4
+Running configuration: 	 16384 threads
+			 grid of 16 x 16
+			 blocks of 4 x 4 x 4 threads (64 threads with 256 bytes of shared memory per block)
+Processing Time: 0.0941 (ms)
+PASSED
+./cudaTemplate --gsx=16 --gsy=16 --bsx=8 --bsy=8 --bsz=8
+Running configuration: 	 131072 threads
+			 grid of 16 x 16
+			 blocks of 8 x 8 x 8 threads (512 threads with 2048 bytes of shared memory per block)
+Processing Time: 0.2479 (ms)
+PASSED
+./cudaTemplate --gsx=32 --gsy=32 --bsx=2 --bsy=2 --bsz=2
+Running configuration: 	 8192 threads
+			 grid of 32 x 32
+			 blocks of 2 x 2 x 2 threads (8 threads with 32 bytes of shared memory per block)
+Processing Time: 0.0987 (ms)
+PASSED
+./cudaTemplate --gsx=32 --gsy=32 --bsx=4 --bsy=4 --bsz=4
+Running configuration: 	 65536 threads
+			 grid of 32 x 32
+			 blocks of 4 x 4 x 4 threads (64 threads with 256 bytes of shared memory per block)
+Processing Time: 0.1415 (ms)
+PASSED
+./cudaTemplate --gsx=32 --gsy=32 --bsx=8 --bsy=8 --bsz=8
+Running configuration: 	 524288 threads
+			 grid of 32 x 32
+			 blocks of 8 x 8 x 8 threads (512 threads with 2048 bytes of shared memory per block)
+Processing Time: 0.8213 (ms)
+PASSED
+./cudaTemplate --gsx=32 --gsy=32 --bsx=16 --bsy=16 --bsz=4
+Running configuration: 	 1048576 threads
+			 grid of 32 x 32
+			 blocks of 16 x 16 x 4 threads (1024 threads with 4096 bytes of shared memory per block)
+Processing Time: 0.7768 (ms)
+PASSED
+rm -f *.o cudaTemplate
