@@ -10,7 +10,7 @@
 #include <timer.h>
 #include <helper_string.h>
 
-#include "helper_functions.h"  // helper for shared functions common to CUDA Samples
+#include "helper_functions.h" // helper for shared functions common to CUDA Samples
 #include "helper_cuda.h"      // helper functions for CUDA error checking and initialization
 
 #define SH_MEM_SIZE (16 * 1024)
@@ -24,43 +24,44 @@ const int const_h[CT_MEM_SIZE] = {1, 2, 3, 4, 5, 6, 7, 8};
 ////////////////////////////////
 int main(int argc, char *argv[])
 {
-    int dim_grid_x, dim_grid_y;		// grid  dimensions
-    int dim_block_x, dim_block_y;	// block dimensions
-	
+    int dim_grid_x, dim_grid_y;                // grid  dimensions
+    int dim_block_x, dim_block_y, dim_block_z; // block dimensions
+
     int *gid_h = NULL; // host data
     int *gid_d = NULL; // device data
-	
+
     long int nPos;
     size_t nBytes, shared_mem_size;
-    
+
     float elapsed_time;
     cudaEvent_t start_event, stop_event;
-	
-    // process command line arguments
-    dim_grid_x  = getCmdLineArgumentInt(argc, (const char **) argv, (const char *) "gsx");
-    dim_grid_y  = getCmdLineArgumentInt(argc, (const char **) argv, (const char *) "gsy");
-    dim_block_x = getCmdLineArgumentInt(argc, (const char **) argv, (const char *) "bsx");
-    dim_block_y = getCmdLineArgumentInt(argc, (const char **) argv, (const char *) "bsy");
 
-    nPos = dim_grid_x * dim_grid_y * dim_block_x * dim_block_y;
+    // process command line arguments
+    dim_grid_x = getCmdLineArgumentInt(argc, (const char **)argv, (const char *)"gsx");
+    dim_grid_y = getCmdLineArgumentInt(argc, (const char **)argv, (const char *)"gsy");
+    dim_block_x = getCmdLineArgumentInt(argc, (const char **)argv, (const char *)"bsx");
+    dim_block_y = getCmdLineArgumentInt(argc, (const char **)argv, (const char *)"bsy");
+    dim_block_z = getCmdLineArgumentInt(argc, (const char **)argv, (const char *)"bsz");
+
+    nPos = dim_grid_x * dim_grid_y * dim_block_x * dim_block_y * dim_block_z;
     nBytes = nPos * sizeof(int);
 
     // allocate host memory
-    gid_h = (int *) malloc(nBytes);
+    gid_h = (int *)malloc(nBytes);
     bzero(gid_h, nBytes);
 
-	// Set the GPU to use
-	checkCudaErrors(cudaSetDevice(0));
-	
+    // Set the GPU to use
+    checkCudaErrors(cudaSetDevice(0));
+
     // allocate device memory
-    checkCudaErrors(cudaMalloc((void **) &gid_d, nBytes));
-   
+    checkCudaErrors(cudaMalloc((void **)&gid_d, nBytes));
+
     // copy data from host memory to device memory
     checkCudaErrors(cudaMemcpy(gid_d, gid_h, nBytes, cudaMemcpyHostToDevice));
-    checkCudaErrors(cudaMemset((void *) gid_d, 0, nBytes));
+    checkCudaErrors(cudaMemset((void *)gid_d, 0, nBytes));
 
     // initialize constant memory
-    checkCudaErrors(cudaMemcpyToSymbol(const_d, const_h, CT_MEM_SIZE*sizeof(int), 0, cudaMemcpyHostToDevice));
+    checkCudaErrors(cudaMemcpyToSymbol(const_d, const_h, CT_MEM_SIZE * sizeof(int), 0, cudaMemcpyHostToDevice));
 
     // create event
     checkCudaErrors(cudaEventCreate(&start_event));
@@ -71,16 +72,16 @@ int main(int argc, char *argv[])
 
     // setup execution parameters
     dim3 grid(dim_grid_x, dim_grid_y);
-    dim3 block(dim_block_x, dim_block_y);
+    dim3 block(dim_block_x, dim_block_y, dim_block_z);
 
     // execute the kernel
-    shared_mem_size = block.x * block.y * sizeof(int);
+    shared_mem_size = block.x * block.y * block.z * sizeof(int);
     assert(shared_mem_size <= SH_MEM_SIZE);
-	
+
     printf("Running configuration: \t %d threads\n\t\t\t grid of %d x %d\n"
-           "\t\t\t blocks of %d x %d threads (%d threads with %d bytes of shared memory per block)\n", 
-           nPos, dim_grid_x, dim_grid_y, dim_block_x, dim_block_y, dim_block_x * dim_block_y, shared_mem_size);
-    
+           "\t\t\t blocks of %d x %d x %d threads (%d threads with %d bytes of shared memory per block)\n",
+           nPos, dim_grid_x, dim_grid_y, dim_block_x, dim_block_y, dim_block_z, dim_block_x * dim_block_y * dim_block_z, shared_mem_size);
+
     foo<<<grid, block, shared_mem_size>>>(gid_d);
 
     // wait for thread completion
@@ -88,30 +89,30 @@ int main(int argc, char *argv[])
 
     // get results back from device memory
     checkCudaErrors(cudaMemcpy(gid_h, gid_d, nBytes, cudaMemcpyDeviceToHost));
-    
+
     // using event
-    cudaEventRecord(stop_event, 0);    
-    cudaEventSynchronize(stop_event);		// block until the event is recorded
-    checkCudaErrors(cudaEventElapsedTime(&elapsed_time, start_event, stop_event));    
+    cudaEventRecord(stop_event, 0);
+    cudaEventSynchronize(stop_event); // block until the event is recorded
+    checkCudaErrors(cudaEventElapsedTime(&elapsed_time, start_event, stop_event));
     printf("Processing Time: %.4f (ms)", elapsed_time);
-    
+
     // check results
-    for(int i = 0; i < nPos; i++) {
+    for (int i = 0; i < nPos; i++)
+    {
         assert(gid_h[i] == (i + const_h[i % CT_MEM_SIZE]));
-	}
-	
+    }
+
     // destroy events
-    cudaEventDestroy(start_event);    
-    cudaEventDestroy(stop_event);    
-    
+    cudaEventDestroy(start_event);
+    cudaEventDestroy(stop_event);
+
     // free device memory
-    checkCudaErrors(cudaFree((void *) gid_d));
-	
+    checkCudaErrors(cudaFree((void *)gid_d));
+
     // free host memory
     free(gid_h);
-	
+
     printf("\nPASSED\n");
     cudaThreadExit();
-    return(0);
+    return (0);
 }
-
